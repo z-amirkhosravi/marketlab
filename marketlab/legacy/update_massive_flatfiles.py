@@ -28,9 +28,6 @@ load_dotenv()  # loads .env if present
 MASSIVE_S3_ACCESS_KEY = os.environ["MASSIVE_S3_ACCESS_KEY"]
 MASSIVE_S3_SECRET_KEY = os.environ["MASSIVE_S3_SECRET_KEY"]
 
-# MASSIVE_S3_ACCESS_KEY = "9d7e4121-59b1-40c7-9d21-c3c1be3330fc"
-# MASSIVE_S3_SECRET_KEY = "z_1FDwK4vNnkIuvnJSDdB2uO4VY_HLDY"
-
 
 S3_ENDPOINT = "https://files.massive.com"
 S3_BUCKET   = "flatfiles"

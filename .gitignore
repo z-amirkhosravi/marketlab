@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data / caches (adjust to your paths)
+arcticdb_stock_store/
+massive_flatfiles/
+factors/arcticdb_stock_store/
+**/_arctic_cfg/
+*.mdb
+*.lock
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

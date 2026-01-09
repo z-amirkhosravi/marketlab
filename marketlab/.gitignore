@@ -1,9 +1,0 @@
-__pycache__/
-.ipynb_checkpoints/
-*.pyc
-*.pyo
-*.pyd
-.env
-arcticdb_stock_store/
-massive_flatfiles/
-factors/arcticdb_stock_store/
