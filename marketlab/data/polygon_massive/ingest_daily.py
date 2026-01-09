@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import os
 from pathlib import Path
 from marketlab.config import MarketlabConfig
 
