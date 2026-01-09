@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+marketlab/__init__.py
+marketlab/config.py
+marketlab.egg-info/PKG-INFO
+marketlab.egg-info/SOURCES.txt
+marketlab.egg-info/dependency_links.txt
+marketlab.egg-info/requires.txt
+marketlab.egg-info/top_level.txt

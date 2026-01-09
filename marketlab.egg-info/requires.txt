@@ -1,0 +1,6 @@
+python-dotenv
+pandas
+numpy
+arcticdb
+boto3
+requests

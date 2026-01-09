@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: marketlab
+Version: 0.0.1
+Requires-Python: >=3.10
+Requires-Dist: python-dotenv
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: arcticdb
+Requires-Dist: boto3
+Requires-Dist: requests
