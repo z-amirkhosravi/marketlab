@@ -31,9 +31,12 @@ class MarketlabConfig:
     # Misc
     max_years_back: int = int(os.getenv("MARKETLAB_MAX_YEARS_BACK", "5"))
 
-    def require_massive_creds(self) -> tuple[str, str]:
-        if not self.massive_access_key or not self.massive_secret_key or not self.massive_api_key
-            raise RuntimeError(
-                "Missing Massive credentials. Set MASSIVE_S3_ACCESS_KEY, MASSIVE_S3_SECRET_KEY, and MASSIVE_API_KEY in your environment."
-            )
-        return self.massive_access_key, self.massive_secret_key, self.massive_api_key
+    def require_massive_api_key(self) -> str:
+        if not self.massive_api_key:
+            raise RuntimeError("Missing MASSIVE_API_KEY")
+        return self.massive_api_key
+
+    def require_massive_s3_creds(self) -> tuple[str, str]:
+        if not self.massive_access_key or not self.massive_secret_key:
+            raise RuntimeError("Missing MASSIVE_S3_ACCESS_KEY / MASSIVE_S3_SECRET_KEY")
+        return self.massive_access_key, self.massive_secret_key

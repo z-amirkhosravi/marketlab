@@ -17,10 +17,11 @@ def run_legacy_daily_ingest(cfg: MarketlabConfig) -> None:
 
     env = dict(**os.environ)
     # Ensure required env vars are present
-    ak, sk, api = cfg.require_massive_creds()
+    api_key = cfg.require_massive_api_key()
+    ak, sk = cfg.require_massive_s3_creds()
     env["MASSIVE_S3_ACCESS_KEY"] = ak
     env["MASSIVE_S3_SECRET_KEY"] = sk
-    env["MASSIVE_API_KEY"] = api
+    env["MASSIVE_API_KEY"] = api_key
     env["MARKETLAB_ARCTIC_URI"] = cfg.arctic_uri
     env["MARKETLAB_ARCTIC_LIB_DAILY"] = cfg.daily_lib
 

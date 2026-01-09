@@ -27,7 +27,7 @@ load_dotenv()  # loads .env if present
 # --- Massive / Polygon S3 config ---
 MASSIVE_S3_ACCESS_KEY = os.environ["MASSIVE_S3_ACCESS_KEY"]
 MASSIVE_S3_SECRET_KEY = os.environ["MASSIVE_S3_SECRET_KEY"]
-
+MASSIVE_API_KEY = os.environ["MASSIVE_API_KEY"]
 
 S3_ENDPOINT = "https://files.massive.com"
 S3_BUCKET   = "flatfiles"
