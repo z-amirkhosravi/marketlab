@@ -14,6 +14,7 @@ venv/
 # Data / caches (adjust to your paths)
 arcticdb_stock_store/
 massive_flatfiles/
+data/polygon_massive/massive_flatfiles/
 factors/arcticdb_stock_store/
 **/_arctic_cfg/
 *.mdb
