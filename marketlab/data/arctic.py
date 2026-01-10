@@ -3,9 +3,12 @@ from __future__ import annotations
 
 import pandas as pd
 from arcticdb import Arctic
+import arcticdb as adb
 
-def get_arctic(uri: str) -> Arctic:
-    return Arctic(uri)
+from marketlab.config import MarketlabConfig
+
+def get_arctic(cfg: MarketlabConfig) -> Arctic:
+    return adb.Arctic(cfg.arctic_uri)
 
 def get_lib(arctic: Arctic, lib_name: str):
     return arctic.get_library(lib_name, create_if_missing=True)
