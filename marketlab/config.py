@@ -20,6 +20,12 @@ class MarketlabConfig:
     daily_lib: str = os.getenv("MARKETLAB_ARCTIC_LIB_DAILY", "daily_ohlc_all")
     daily_symbol_set: str = os.getenv("MARKETLAB_DAILY_SYMBOL_SET", "us_stocks_day_aggs_v1")
 
+    massive_cache_dir: Path = Path(
+        os.getenv("MARKETLAB_MASSIVE_CACHE_DIR", "./marketlab/data/polygon_massive/massive_flatfiles")
+    ).resolve()
+
+    daily_symbol_set: str = os.getenv("MARKETLAB_DAILY_SYMBOL", "us_stocks_sip/day_aggs_v1")
+
     # Massive S3 creds (DO NOT COMMIT)
     massive_access_key: str | None = os.getenv("MASSIVE_S3_ACCESS_KEY")
     massive_secret_key: str | None = os.getenv("MASSIVE_S3_SECRET_KEY")

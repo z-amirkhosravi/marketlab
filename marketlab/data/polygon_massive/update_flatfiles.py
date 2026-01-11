@@ -1,4 +1,4 @@
-# config.py (or top of your script)
+# marketlab/data/polygon_massive/update_flatfiles.py  (renamed from update_massive_flatfiles.py)
 import os
 import io, json, zipfile, re
 
