@@ -7,8 +7,8 @@ import arcticdb as adb
 
 from marketlab.config import MarketlabConfig
 
-def get_arctic(cfg: MarketlabConfig) -> Arctic:
-    return adb.Arctic(cfg.arctic_uri)
+def get_arctic(uri: str) -> Arctic:
+    return adb.Arctic(uri)
 
 def get_lib(arctic: Arctic, lib_name: str):
     return arctic.get_library(lib_name, create_if_missing=True)

@@ -25,6 +25,8 @@ def main():
     start = parse_date(args.start)
     end = parse_date(args.end)
 
+    
+
     for day in daterange(start, end):
         info = ingest_day(cfg, day, append=not args.rewrite)
         print(info)

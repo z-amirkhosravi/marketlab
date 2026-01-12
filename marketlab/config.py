@@ -31,6 +31,7 @@ class MarketlabConfig:
     massive_secret_key: str | None = os.getenv("MASSIVE_S3_SECRET_KEY")
     massive_api_key: str | None = os.getenv("MASSIVE_API_KEY")
     massive_endpoint: str = os.getenv("MASSIVE_S3_ENDPOINT", "https://files.massive.ca")
+    massive_bucket: str = os.getenv("MASSIVE_S3_BUCKET", "flatfiles")
 
     # Local cache dirs
     cache_dir: Path = Path(os.getenv("MARKETLAB_CACHE_DIR", "./massive_flatfiles")).resolve()
