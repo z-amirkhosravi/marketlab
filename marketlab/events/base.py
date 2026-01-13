@@ -1,23 +1,19 @@
-# marketlab/events/base.py
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Callable
 import pandas as pd
 
-class Event(Protocol):
-    name: str
-    def mask(self, df: pd.DataFrame) -> pd.Series:
-        """Return boolean Series indexed like df.index"""
 
 @dataclass(frozen=True)
-class FuncEvent:
+class Event:
     name: str
-    fn: callable
+    fn: Callable[[pd.DataFrame], pd.Series]
 
     def mask(self, df: pd.DataFrame) -> pd.Series:
         m = self.fn(df)
         if not isinstance(m, pd.Series):
-            raise TypeError("Event function must return a pd.Series")
+            raise TypeError("Event function must return a pandas Series")
         if not m.index.equals(df.index):
-            raise ValueError("Event mask must share df.index")
+            raise ValueError("Event mask index must match df.index")
         return m.astype(bool)
