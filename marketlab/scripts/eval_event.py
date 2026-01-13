@@ -49,12 +49,12 @@ def main():
         dd = df.loc[idx_mask]
         mm = event_mask.loc[idx_mask]
         rr = r.loc[idx_mask]
-        out = evaluate_event(dd, mm, rr)
+        out = evaluate_event(dd, mm, rr, timeframe=args.timeframe, horizon=args.horizon)
         out.insert(0, "slice_name", slice_name)
         return out
 
     if args.split == "none":
-        out = evaluate_event(df, event_mask, r)
+        out = evaluate_event(dd, mm, rr, timeframe=args.timeframe, horizon=args.horizon)
         out.insert(0, "slice_name", "all")
         outs.append(out)
 

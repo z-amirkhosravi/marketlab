@@ -1,0 +1,14 @@
+# Simple trend filters
+close_above_sma:20
+close_above_sma:50
+close_above_sma:200
+
+# Mean-reversion-ish complements
+close_below_sma:20
+close_below_sma:50
+
+# Simple combos
+close_above_sma:20&close_above_sma:50
+close_above_sma:50&close_above_sma:200
+!close_above_sma:20
+
