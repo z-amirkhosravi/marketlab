@@ -14,6 +14,9 @@ from marketlab.research.evaluate import evaluate_event
 from marketlab.research.splits import yearly_slices, rolling_slices
 from marketlab.regimes import build_regime
 from marketlab.events import AndEvent
+from marketlab.trading.signals import TradeSignal
+from marketlab.trading.returns import trade_returns_next_open_close_at_horizon
+
 
 
 def load_event_specs(events_file: str | None, events: list[str]) -> list[str]:
@@ -50,6 +53,10 @@ def main():
     p.add_argument("--limit-print", type=int, default=20, help="How many rows to print as preview")
     p.add_argument("--regime", action="append", default=[], help="Regime spec (repeatable)")
     p.add_argument("--regimes-file", default=None, help="File with one regime spec per line")
+    p.add_argument("--trade", action="store_true")
+    p.add_argument("--direction", choices=["long", "short"], default="long")
+    p.add_argument("--cost-bps", type=float, default=0.0, help="Round-trip cost per trade in bps (only when --trade)")
+
 
     args = p.parse_args()
 
@@ -62,7 +69,11 @@ def main():
     df = read_bars(lib, args.timeframe, args.symbol).copy().sort_index()
 
     # outcome series (same for all events)
-    r = fwd_return(df["close"], horizon=args.horizon)
+    if args.trade:
+        sig = TradeSignal(direction=+1 if args.direction == "long" else -1)
+        r = trade_returns_next_open_close_at_horizon(df, horizon=args.horizon, signal=sig, cost_bps=args.cost_bps)
+    else:
+        r = fwd_return(df["close"], horizon=args.horizon)
 
     # choose slices
     slices: list[tuple[str, pd.Series | list[bool]]] = []

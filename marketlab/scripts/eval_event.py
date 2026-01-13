@@ -12,6 +12,8 @@ from marketlab.events.composable import AndEvent
 from marketlab.events.parser import build_event
 from marketlab.regimes import build_regime
 from marketlab.events import AndEvent
+from marketlab.trading.signals import TradeSignal
+from marketlab.trading.returns import trade_returns_next_open_close_at_horizon
 
 from marketlab.research.splits import yearly_slices, rolling_slices
 import numpy as np
@@ -28,6 +30,10 @@ def main():
     )
     p.add_argument("--split", default="none", help="none | yearly | rolling:<window>:<step>")
     p.add_argument("--regime", default=None, help="Optional regime spec, e.g. trend_up_200 or vol_high:0.67")
+    p.add_argument("--trade", action="store_true", help="Evaluate a trade: enter next open, exit close at horizon")
+    p.add_argument("--direction", choices=["long", "short"], default="long")
+    p.add_argument("--cost-bps", type=float, default=0.0, help="Round-trip cost per trade in bps (only when --trade)")
+
 
 
     args = p.parse_args()
@@ -52,7 +58,12 @@ def main():
         event_mask = event.mask(df)
 
 
-    r = fwd_return(df["close"], horizon=args.horizon)
+    # outcome series
+    if args.trade:
+        sig = TradeSignal(direction=+1 if args.direction == "long" else -1)
+        r = trade_returns_next_open_close_at_horizon(df, horizon=args.horizon, signal=sig, cost_bps=args.cost_bps)
+    else:
+        r = fwd_return(df["close"], horizon=args.horizon)
 
     outs = []
 
