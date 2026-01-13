@@ -20,8 +20,16 @@ def build_event(spec: str) -> Event:
         name, *args = atom.split(":")
         if name not in EVENT_FACTORIES:
             raise ValueError(f"Unknown event '{name}'")
+        
+        def parse_number(x: str):
+            try:
+                if "." in x or "e" in x.lower():
+                    return float(x)
+                return int(x)
+            except ValueError:
+                return float(x)
 
-        params = [int(a) for a in args]
+        params = [parse_number(a) for a in args]
         e = EVENT_FACTORIES[name](*params)
         return NotEvent(e) if neg else e
 

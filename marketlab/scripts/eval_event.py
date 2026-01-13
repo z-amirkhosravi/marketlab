@@ -10,6 +10,8 @@ from marketlab.research.evaluate import evaluate_event
 from marketlab.events.library import close_above_sma
 from marketlab.events.composable import AndEvent
 from marketlab.events.parser import build_event
+from marketlab.regimes import build_regime
+from marketlab.events import AndEvent
 
 from marketlab.research.splits import yearly_slices, rolling_slices
 import numpy as np
@@ -25,6 +27,7 @@ def main():
     help="Event spec, e.g. close_above_sma:20 or close_above_sma:20&close_above_sma:50"
     )
     p.add_argument("--split", default="none", help="none | yearly | rolling:<window>:<step>")
+    p.add_argument("--regime", default=None, help="Optional regime spec, e.g. trend_up_200 or vol_high:0.67")
 
 
     args = p.parse_args()
@@ -40,6 +43,14 @@ def main():
 
     event = build_event(args.event)
     event_mask = event.mask(df) 
+
+    regime = None
+    if args.regime:
+        regime = build_regime(args.regime)
+        combined = AndEvent(event, regime, name=f"({event.name} AND {regime.name})")
+        event = combined
+        event_mask = event.mask(df)
+
 
     r = fwd_return(df["close"], horizon=args.horizon)
 
@@ -77,6 +88,7 @@ def main():
     out.insert(1, "timeframe", args.timeframe)
     out.insert(2, "horizon", args.horizon)
     out.insert(3, "event", event.name)
+    out.insert(4, "regime", regime.name if regime else "none")
     # Pretty print
     with pd.option_context("display.max_columns", 50, "display.width", 140):
         print(out)

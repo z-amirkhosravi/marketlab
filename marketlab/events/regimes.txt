@@ -1,0 +1,5 @@
+trend_up_200
+trend_down_200
+vol_high:0.67
+vol_low:0.33
+

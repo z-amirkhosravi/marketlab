@@ -1,0 +1,12 @@
+# Gap events
+gap_up:0.01
+gap_down:0.01
+gap_up:0.02
+gap_down:0.02
+
+# Range expansion/contraction relative to ATR14
+range_expansion_atr:1.25
+range_expansion_atr:1.50
+range_contraction_atr:0.75
+range_contraction_atr:0.60
+

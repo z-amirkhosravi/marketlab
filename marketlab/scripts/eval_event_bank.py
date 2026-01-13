@@ -12,6 +12,8 @@ from marketlab.events.parser import build_event
 from marketlab.outcomes.forward import fwd_return
 from marketlab.research.evaluate import evaluate_event
 from marketlab.research.splits import yearly_slices, rolling_slices
+from marketlab.regimes import build_regime
+from marketlab.events import AndEvent
 
 
 def load_event_specs(events_file: str | None, events: list[str]) -> list[str]:
@@ -46,6 +48,9 @@ def main():
     p.add_argument("--events-file", default=None, help="Path to a text file of event specs (one per line)")
     p.add_argument("--out", default="event_bank_results.csv", help="Output CSV path")
     p.add_argument("--limit-print", type=int, default=20, help="How many rows to print as preview")
+    p.add_argument("--regime", action="append", default=[], help="Regime spec (repeatable)")
+    p.add_argument("--regimes-file", default=None, help="File with one regime spec per line")
+
     args = p.parse_args()
 
     event_specs = load_event_specs(args.events_file, args.event)
@@ -73,26 +78,42 @@ def main():
         raise ValueError("Invalid --split")
 
     all_rows = []
+    regime_specs = load_event_specs(args.regimes_file, args.regime)  # reuse your helper
+    if not regime_specs:
+        regime_specs = ["none"]
     started = dt.datetime.now()
 
     for spec in event_specs:
-        event = build_event(spec)
-        event_mask_full = event.mask(df)
+        base_event = build_event(spec)
+        base_mask = base_event.mask(df)
 
-        for slice_name, idx_mask in slices:
-            dd = df.loc[idx_mask]
-            mm = event_mask_full.loc[idx_mask]
-            rr = r.loc[idx_mask]
+        for rspec in regime_specs:
+            if rspec == "none":
+                event = base_event
+                event_mask_full = base_mask
+                regime_name = "none"
+            else:
+                reg = build_regime(rspec)
+                event = AndEvent(base_event, reg, name=f"({base_event.name} AND {reg.name})")
+                event_mask_full = event.mask(df)
+                regime_name = reg.name
 
-            out = evaluate_event(dd, mm, rr, timeframe=args.timeframe, horizon=args.horizon)
-            out.insert(0, "symbol", args.symbol)
-            out.insert(1, "timeframe", args.timeframe)
-            out.insert(2, "horizon", args.horizon)
-            out.insert(3, "event_spec", spec)
-            out.insert(4, "event", event.name)
-            out.insert(5, "slice_name", slice_name)
+            for slice_name, idx_mask in slices:
+                dd = df.loc[idx_mask]
+                mm = event_mask_full.loc[idx_mask]
+                rr = r.loc[idx_mask]
 
-            all_rows.append(out)
+                out = evaluate_event(dd, mm, rr, timeframe=args.timeframe, horizon=args.horizon)
+                out.insert(0, "symbol", args.symbol)
+                out.insert(1, "timeframe", args.timeframe)
+                out.insert(2, "horizon", args.horizon)
+                out.insert(3, "event_spec", spec)
+                out.insert(4, "event", event.name)
+                out.insert(5, "slice_name", slice_name)                
+                out.insert(6, "regime_spec", rspec)
+                out.insert(7, "regime", regime_name)
+
+                all_rows.append(out)
 
     result = pd.concat(all_rows, ignore_index=True)
 
@@ -105,7 +126,8 @@ def main():
 
     # Preview: show conditional rows only, sorted by sharpe
     preview = result[result["slice"] == "conditional"].copy()
-    preview = preview.sort_values(["slice_name", "sharpe"], ascending=[True, False])
+    preview = preview.sort_values(["slice_name", "sharpe_ann"], ascending=[True, False])
+
     with pd.option_context("display.max_columns", 60, "display.width", 160):
         print(preview.head(args.limit_print))
 
